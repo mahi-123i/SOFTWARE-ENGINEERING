@@ -1,0 +1,12 @@
+
+.background-container {
+    background-image: url('static/img/se.jpg'); /* Replace 'path/to/your/image.jpg' with the actual path to your image */
+    background-size: cover; /* Cover the entire background */
+    background-repeat: no-repeat; /* Prevent repeating the background image */
+    padding: 20px; /* Add padding to ensure content is visible */
+    border-radius: 10px; /* Add border radius for styling */
+    margin-top: 50px; /* Adjust margin top to center the container */
+    color: white; /* Set text color to white for better readability */
+}
+
+/* Additional styling for form elements if needed */

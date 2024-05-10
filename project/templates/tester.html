@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tester Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Tester Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Bug Details</h2>
+        <div id="bug-details"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fetch bug details from backend
+            $.ajax({
+                url: 'backend/bug_details_endpoint', // Replace with your actual backend endpoint for fetching bug details
+                type: 'GET',
+                success: function(data) {
+                    // Display bug details
+                    displayBugDetails(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching bug details:', error);
+                }
+            });
+
+            // Function to display bug details
+            function displayBugDetails(bugDetails) {
+                var bugDetailsContainer = $('#bug_details');
+                // Clear existing content
+                bugDetailsContainer.empty();
+
+                // Iterate through bug details and create HTML elements
+                $.each(bugDetails, function(index, bug) {
+                    var bugElement = $('<div class="card mb-3">');
+                    var bugCardBody = $('<div class="card-body">');
+                    bugCardBody.append(`<h5 class="card-title">${bug.title}</h5>`);
+                    bugCardBody.append(`<p class="card-text">${bug.description}</p>`);
+
+                    // Add options for bug status
+                    var statusOptions = `<select class="form-select mb-3" data-bug-id="${bug.id}">
+                                            <option ${bug.status === 'open' ? 'selected' : ''}>Open</option>
+                                            <option ${bug.status === 'closed' ? 'selected' : ''}>Closed</option>
+                                            <option ${bug.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                                        </select>`;
+                    bugCardBody.append(statusOptions);
+
+                    // Add suggestion textbox if bug is in progress
+                    if (bug.status === 'in_progress') {
+                        var suggestionTextbox = `<textarea class="form-control mb-3" rows="2" placeholder="Give suggestion"></textarea>`;
+                        bugCardBody.append(suggestionTextbox);
+                    }
+
+                    bugElement.append(bugCardBody);
+                    bugDetailsContainer.append(bugElement);
+                });
+
+                // Event listener for status change
+                $('select').change(function() {
+                    var bugId = $(this).data('bug-id');
+                    var status = $(this).val();
+                    // Example: Send bug status update to backend
+                    $.ajax({
+                        url: 'backend/update_bug_status_endpoint',
+                        type: 'POST',
+                        data: { bug_id: bugId, status: status },
+                        success: function(response) {
+                            console.log('Bug status updated successfully:', response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error updating bug status:', error);
+                        }
+                    });
+                });
+
+                // Event listener for suggestion submission
+                $('textarea').change(function() {
+                    var bugId = $(this).siblings('select').data('bug-id');
+                    var suggestion = $(this).val();
+                    // Example: Send suggestion to backend
+                    $.ajax({
+                        url: 'backend/store_suggestion_endpoint',
+                        type: 'POST',
+                        data: { bug_id: bugId, suggestion: suggestion },
+                        success: function(response) {
+                            console.log('Suggestion stored successfully:', response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error storing suggestion:', error);
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

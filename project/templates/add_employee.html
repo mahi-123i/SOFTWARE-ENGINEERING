@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <link href="static/css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+  </head>
+  <body>
+    <div class="main_div">
+      <div class="title">Employee Registration</div>
+      <form id="registration-form" >
+        <div class="input_box">
+          <input type="text" name="name" placeholder="Name" required>
+          <div class="icon"><i class="fas fa-user"></i></div>
+        </div>
+        <div class="input_box">
+          <input type="text" name="username" placeholder="Username" required>
+          <div class="icon"><i class="fas fa-user"></i></div>
+        </div>
+        <div class="input_box">
+          <input type="password" name="password" placeholder="Password" required>
+          <div class="icon"><i class="fas fa-lock"></i></div>
+        </div>
+        <div class="input_box">
+          <input type="email" name="email" placeholder="Email" required>
+          <div class="icon"><i class="fas fa-envelope"></i></div>
+        </div>
+        <div class="input_box button">
+          <input type="submit" value="Register">
+        </div>
+        <div class="login">
+          Already have an account? <a href="/emplogin">Login</a>
+        </div>
+      </form>
+    </div>
+    
+    <script>
+       document.getElementById('registration-form').addEventListener('submit', function(event) {
+                event.preventDefault();  // Prevent the default form submission
+                var formData = new FormData(this);
+                
+                fetch('/add-employee', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);  // Display an alert if there's an error
+                    } else {
+                        alert(data.success);  // Display a success message
+                        window.location.replace('/manager_dashboard1');// Optionally redirect to dashboard
+                    }
+                })
+                .catch(error => {
+                    alert('Failed to submit form: ' + error);  // Display an error if the request failed
+                });
+            });
+    
+    </script>
+    
+  </body>
+</html>

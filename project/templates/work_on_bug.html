@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Bug</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">Tester Dashboard</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2>Update Bug #{{ bug_id }}</h2>
+        <form action="{{ url_for('update_bug', bug_id=bug_id) }}" method="POST">
+            <div class="mb-3">
+                <label for="progress" class="form-label">Progress:</label>
+                <select class="form-select" id="progress" name="progress" required>
+                    <option value="open" {% if current_progress == 'open' %}selected{% endif %}>Open</option>
+                    <option value="in_progress" {% if current_progress == 'in_progress' %}selected{% endif %}>In Progress</option>
+                    <option value="closed" {% if current_progress == 'closed' %}selected{% endif %}>Closed</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="suggestion" class="form-label">Suggestion:</label>
+                <textarea class="form-control" id="suggestion" name="suggestion" rows="3" required>{{ current_suggestion | default('') }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
